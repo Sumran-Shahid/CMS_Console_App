@@ -50,53 +50,7 @@ void SignIn::accessLevel(void) {
 }
 
 
-// adminAccess function starts here ---------------------------------------------------------------------------------------------------
-//void SignIn::adminAccess(void) {
-//    /*
-//     * THIS FUNCTION IS THE CHECK FOR SIGNING IN TO ADMIN ACCESS LEVEL.
-//     * IT PROMPTS THE USER TO ENTER THEIR CMS ID WHICH IS THEN MATCHED
-//     * WITH A PRESTORED CSV FILE AND THE THE USER IS SIGNED IN
-//     */
-//
-//    char cms_id;
-//    cout << "\nEnter your CMS ID : ";
-//    cin >> cms_id;
-//    cout << endl;
-//
-//    ifstream list;
-//    list.open("admins.csv");
-//
-//    if (list.fail()) {
-//        cout << "File could not be opened" << endl;
-//    }
-//
-//    string name, email;
-//    string cmsID;
-//
-//    while (list.peek() != EOF) {  // this while loop runs through all the lines of the csv file
-//        bool id_found = false;  // this variable is used to check if the ID is found in the CSV or not
-//        while (getline(list, cmsID, ',') && getline(list, name, ',') && getline(list, email, '\n')) {  // this while loop gets the values in each like
-//            int x(0);
-//            stringstream num(cmsID);
-//            num >> x;  // this part is to actually convert the cmsID into an int variable because the values stored in a csv are always in string data type
-//           
-//            if (x == cms_id) { // this conditional checks each item / line in the csv file to find the required item with the cms_id entered above
-//                id_found = true;  // variable set to true as the ID has been found
-//            }
-//
-//        } // inner while ends here
-//        if (!id_found) {  // if the ID is not found, i.e., this variable is still false
-//            cout << "ID not found! Please Enter it again.\n";
-//            cin.clear();
-//            cin.ignore(123, '\n');
-//            adminAccess();
-//        }
-//    } // first while ends here
-//
-//    list.close();
-//}
-
-
+// adminAccess function starts here -----------------------------------------------------------------------------------------------------------
 void SignIn::adminAccess(void) {
     /*
      * THIS FUNCTION IS THE CHECK FOR SIGNING IN TO ADMIN ACCESS LEVEL.
