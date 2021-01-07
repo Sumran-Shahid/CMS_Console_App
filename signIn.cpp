@@ -8,6 +8,23 @@
 using namespace std;
 
 
+// This function is used to validate the number input if an ambigous character is entered in the stream instead of a number or a number out of the range
+int get_int(int min, string prompt) {
+    int ret_integer;
+    string str_number;
+    while(true) {
+        cout << prompt;
+        getline(cin, str_number); //get string input
+        stringstream convert(str_number); //turns the string into a stream
+        //checks for complete conversion to integer and checks for minimum value
+        if(convert >> ret_integer && !(convert >> str_number) && ret_integer >= min) { 
+            return ret_integer;
+        }
+        cin.clear(); //just in case an error occurs with cin (eof(), etc)
+        cerr << "Input must be a number >= " << min << "\nPlease enter a number from the given choices.\n";
+    }
+}
+
 
 // accessLevel function starts here ---------------------------------------------------------------------------------------------------
 void SignIn::accessLevel(void) {
@@ -23,32 +40,46 @@ void SignIn::accessLevel(void) {
     cout << "[2] - Teacher Level\n";
     cout << "[3] - Student Level\n";
     cout << "[4] - Exit The Program\n";
-    cout << "--> ";
+    
 
     // The input given by the user depending on the above statements is catched in this variable
-    cin >> access_lvl;
-
-    switch (access_lvl) {
-    case 1:
-        adminAccess();
-        break;
-    case 2:
-        teacherAccess();
-        break;
-    case 3:
-        studentAccess();
-        break;
-    case 4:
-        cout << "Exiting program..." << endl;
-        exit(1);    
-    default:
-        cout << "Please enter a value from the given choices.\n\n";
-        accessLevel();
-        break;
+    access_lvl = get_int(1, "-->");
+    if (access_lvl == 4) {
+        exit(1);
     }
-    // int new_entry;
-    // cout << "\nDo you want to make a new account or sign in an existing account?\n";
-    // cout << "[1] - Make a new account.\n"
+    else if ((access_lvl != 1) && (access_lvl != 2) && (access_lvl != 3)) {
+        cout << "Please enter a number from the given choices.\n";
+        accessLevel();
+    }
+
+    // Asking the user if he wants to create a new account or signin to an existing account
+    int new_entry;
+    cout << "\nDo you want to make a new account or sign in an existing account?\n";
+    cout << "[1] - Sign in to an existing account.\n";
+    cout << "[2] - Make a new account.\n";
+    new_entry = get_int(1, "-->");
+
+
+    if (new_entry == 1) {
+        switch (access_lvl) {
+        case 1:
+            adminAccess();
+            break;
+        case 2:
+            teacherAccess();
+            break;
+        case 3:
+            studentAccess();
+            break;
+        }
+    }
+    else if (new_entry == 2) {
+        // make a new account code goes here
+    }
+    else {
+        cout << "Please enter a value from the given choices.\n";
+        accessLevel();
+    }
 }
 
 
