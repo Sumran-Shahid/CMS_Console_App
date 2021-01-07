@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <conio.h>
 
 #include "signIn.h"
 #include "customFunctions.h"
@@ -62,8 +63,11 @@ void SignIn::accessLevel(void) {
         case 1:
             newAdmin();
             break;
-        
-        default:
+        case 2:
+            newTeacher();
+            break;
+        case 3:
+            newStudent();
             break;
         }
     }
@@ -71,7 +75,9 @@ void SignIn::accessLevel(void) {
         cout << "Please enter a value from the given choices.\n";
         accessLevel();
     }
-}
+    cout << "\nPress any key to continue.";
+    _getch(); // to control the screen here
+} // accessLevel function ends here
 
 
 // adminAccess function starts here ---------------------------------------------------------------------------------------------------
@@ -268,6 +274,7 @@ void SignIn::newAdmin(void) {
 
         // all information has been collected from the user. Now this can be written in the file
         list << id << ',' << name << ',' << email << '\n';
+        cout << "You have signed in as an admin.\n";
     } // else block ends here
 }
 
@@ -310,6 +317,7 @@ void SignIn::newTeacher(void) {
 
         // all information has been collected from the user. Now this can be written in the file
         list << id << ',' << name << ',' << email << '\n';
+        cout << "You have signed in as an teacher.\n";
     } // else block ends here
 }
 
@@ -352,5 +360,6 @@ void SignIn::newStudent(void) {
 
         // all information has been collected from the user. Now this can be written in the file
         list << id << ',' << name << ',' << email << '\n';
+        cout << "You have signed in as an teacher.\n";
     } // else block ends here
 }
