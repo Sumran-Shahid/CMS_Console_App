@@ -12,6 +12,9 @@ public:
     void adminAccess(void);
     void teacherAccess(void);
     void studentAccess(void);
+    void newAdmin(void);
+    void newTeacher(void);
+    void newStudent(void);
 };
 
 #endif

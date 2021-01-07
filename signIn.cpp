@@ -4,26 +4,10 @@
 #include <sstream>
 
 #include "signIn.h"
+#include "customFunctions.h"
 
 using namespace std;
 
-
-// This function is used to validate the number input if an ambigous character is entered in the stream instead of a number or a number out of the range
-int get_int(int min, string prompt) {
-    int ret_integer;
-    string str_number;
-    while(true) {
-        cout << prompt;
-        getline(cin, str_number); //get string input
-        stringstream convert(str_number); //turns the string into a stream
-        //checks for complete conversion to integer and checks for minimum value
-        if(convert >> ret_integer && !(convert >> str_number) && ret_integer >= min) { 
-            return ret_integer;
-        }
-        cin.clear(); //just in case an error occurs with cin (eof(), etc)
-        cerr << "Input must be a number >= " << min << "\nPlease enter a number from the given choices.\n";
-    }
-}
 
 
 // accessLevel function starts here ---------------------------------------------------------------------------------------------------
@@ -74,7 +58,14 @@ void SignIn::accessLevel(void) {
         }
     }
     else if (new_entry == 2) {
-        // make a new account code goes here
+        switch (access_lvl) {
+        case 1:
+            newAdmin();
+            break;
+        
+        default:
+            break;
+        }
     }
     else {
         cout << "Please enter a value from the given choices.\n";
@@ -100,7 +91,7 @@ void SignIn::adminAccess(void) {
     list.open("CSvs/admins.csv");
 
     if (list.fail()) {
-        cout << "File could not be opened" << endl;
+        cout << "ERROR! File not found" << endl;
     }
 
     string name, email;
@@ -149,7 +140,7 @@ void SignIn::teacherAccess(void) {
     list.open("CSVs/teachers.csv");
 
     if (list.fail()) {
-        cout << "File could not be opened" << endl;
+        cout << "ERROR! File not found" << endl;
     }
 
     string name, email;
@@ -197,7 +188,7 @@ void SignIn::studentAccess(void) {
     list.open("CSVs/SecCList.csv");
 
     if (list.fail()) {
-        cout << "File could not be opened" << endl;
+        cout << "ERROR! File not found" << endl;
     }
 
     string name, section;
@@ -228,4 +219,138 @@ void SignIn::studentAccess(void) {
     } // first while ends here
 
     list.close();
+}
+
+
+/*
+ * NEW ADMIN, NEW TEACHER AND NEW STUDENT
+ * METHODS WILL BE USED TO CREATE NEW
+ * ENTRIES IN THE CVSs TO MAKE A NEW
+ * ACCOUNT FOR THE USER
+ */
+
+
+// newAdmin function starts here -----------------------------------------------------------------------------------------------------------
+void SignIn::newAdmin(void) {
+    
+    ofstream list("CSVs/admins.csv", ios::app);
+    
+    if (list.fail()) { // if file is not found
+        cout << "ERROR! File not found" << endl;
+    }
+    else { // if file is opened successfully
+        string name;
+        string email;
+        string str_id;
+        int id;
+        cout << "Please enter your name : ";
+        getline(cin, name);
+        while (1) { // this loop keeps taking input from user for the CMS ID 
+            cout << "Enter your 6 digit CMS ID : ";
+            cin >> str_id;
+            if (!valid_int(str_id)) {  // valid int function is declared in customfunctions.h
+                cout << "Please enter a valid CMS ID.\n";
+            }
+            stringstream num(str_id);
+            num >> id;
+            if ((id < 100000) || (id > 999999)) {
+                cout << "Please enter a valid CMS ID.\n\n";
+                cin.clear();
+                cin.ignore(123, '\n');
+            }
+            else {
+                break;
+            }
+        }  // while loop ends here
+    
+        cout << "Please enter your valid Email address : ";
+        cin >> email;
+
+        // all information has been collected from the user. Now this can be written in the file
+        list << id << ',' << name << ',' << email << '\n';
+    } // else block ends here
+}
+
+
+// newTeacher function starts here -----------------------------------------------------------------------------------------------------------
+void SignIn::newTeacher(void) {
+    
+    ofstream list("CSVs/teachers.csv", ios::app);
+    
+    if (list.fail()) { // if file is not found
+        cout << "ERROR! File not found" << endl;
+    }
+    else { // if file is opened successfully
+        string name;
+        string email;
+        string str_id;
+        int id;
+        cout << "Please enter your name : ";
+        getline(cin, name);
+        while (1) { // this loop keeps taking input from user for the CMS ID 
+            cout << "Enter your 6 digit CMS ID : ";
+            cin >> str_id;
+            if (!valid_int(str_id)) {  // valid int function is declared in customfunctions.h
+                cout << "Please enter a valid CMS ID.\n";
+            }
+            stringstream num(str_id);
+            num >> id;
+            if ((id < 100000) || (id > 999999)) {
+                cout << "Please enter a valid CMS ID.\n\n";
+                cin.clear();
+                cin.ignore(123, '\n');
+            }
+            else {
+                break;
+            }
+        }  // while loop ends here
+    
+        cout << "Please enter your valid Email address : ";
+        cin >> email;
+
+        // all information has been collected from the user. Now this can be written in the file
+        list << id << ',' << name << ',' << email << '\n';
+    } // else block ends here
+}
+
+
+// newTeacher function starts here -----------------------------------------------------------------------------------------------------------
+void SignIn::newStudent(void) {
+    
+    ofstream list("CSVs/students.csv", ios::app);
+    
+    if (list.fail()) { // if file is not found
+        cout << "ERROR! File not found" << endl;
+    }
+    else { // if file is opened successfully
+        string name;
+        string email;
+        string str_id;
+        int id;
+        cout << "Please enter your name : ";
+        getline(cin, name);
+        while (1) { // this loop keeps taking input from user for the CMS ID 
+            cout << "Enter your 6 digit CMS ID : ";
+            cin >> str_id;
+            if (!valid_int(str_id)) {  // valid int function is declared in customfunctions.h
+                cout << "Please enter a valid CMS ID.\n";
+            }
+            stringstream num(str_id);
+            num >> id;
+            if ((id < 100000) || (id > 999999)) {
+                cout << "Please enter a valid CMS ID.\n\n";
+                cin.clear();
+                cin.ignore(123, '\n');
+            }
+            else {
+                break;
+            }
+        }  // while loop ends here
+    
+        cout << "Please enter your valid Email address : ";
+        cin >> email;
+
+        // all information has been collected from the user. Now this can be written in the file
+        list << id << ',' << name << ',' << email << '\n';
+    } // else block ends here
 }
