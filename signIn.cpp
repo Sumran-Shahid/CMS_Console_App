@@ -28,29 +28,31 @@ void SignIn::accessLevel(void) {
     // The input given by the user depending on the above statements is catched in this variable
     cin >> access_lvl;
 
-    // Now depending upon the user's input of the access level, program is diverted into the respected functions using a switch
     switch (access_lvl) {
-    case (1):
+    case 1:
         adminAccess();
         break;
-    case (2):
+    case 2:
         teacherAccess();
         break;
-    case (3):
+    case 3:
         studentAccess();
         break;
-    case (4):
-        exit(1);
-        break;
+    case 4:
+        cout << "Exiting program..." << endl;
+        exit(1);    
     default:
-        cout << "Please enter a number from the given choices." << endl;
+        cout << "Please enter a value from the given choices.\n\n";
         accessLevel();
         break;
     }
+    // int new_entry;
+    // cout << "\nDo you want to make a new account or sign in an existing account?\n";
+    // cout << "[1] - Make a new account.\n"
 }
 
 
-// adminAccess function starts here -----------------------------------------------------------------------------------------------------------
+// adminAccess function starts here ---------------------------------------------------------------------------------------------------
 void SignIn::adminAccess(void) {
     /*
      * THIS FUNCTION IS THE CHECK FOR SIGNING IN TO ADMIN ACCESS LEVEL.
@@ -64,7 +66,7 @@ void SignIn::adminAccess(void) {
     cout << endl;
 
     ifstream list;
-    list.open("admins.csv");
+    list.open("CSvs/admins.csv");
 
     if (list.fail()) {
         cout << "File could not be opened" << endl;
@@ -82,6 +84,7 @@ void SignIn::adminAccess(void) {
 
             if (x == cms_id) { // this conditional checks each item / line in the csv file to find the required item with the cms_id entered above
                 id_found = true; // variable set to true as the ID has been found
+                cout << "You have signed in as an Admin.\n";
             }
 
         } // inner while ends here
@@ -112,7 +115,7 @@ void SignIn::teacherAccess(void) {
     cout << endl;
 
     ifstream list;
-    list.open("teachers.csv");
+    list.open("CSVs/teachers.csv");
 
     if (list.fail()) {
         cout << "File could not be opened" << endl;
@@ -130,6 +133,7 @@ void SignIn::teacherAccess(void) {
 
             if (x == cms_id) { // this conditional checks each item / line in the csv file to find the required item with the cms_id entered above
                 id_found = true;  // variable set to true as the ID has been found
+                cout << "You have signed in as a Teacher.\n";
             }
 
         } // inner while ends here
@@ -159,7 +163,7 @@ void SignIn::studentAccess(void) {
     cout << endl;
 
     ifstream list;
-    list.open("SecCList.csv");
+    list.open("CSVs/SecCList.csv");
 
     if (list.fail()) {
         cout << "File could not be opened" << endl;
@@ -176,8 +180,9 @@ void SignIn::studentAccess(void) {
             stringstream num(cmsID);
             num >> x;  // this part is to actually convert the cmsID into an int variable because the values stored in a csv are always in string data type
 
-            if (x == cms_id) { // this conditional checks each item / line in the csv file to find the required item with the cms_id entered above
+            if (x == cms_id) { // this conditional checks each item line in the csv file to find the required item with the cms_id entered above
                 id_found = true;  // variable set to true as the ID has been found
+                cout << "You have signed in as a Student.\n";
             }
 
 

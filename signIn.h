@@ -1,3 +1,6 @@
+#ifndef SIGNIN
+#define SIGNIN
+
 #pragma once
 
 class SignIn {
@@ -9,3 +12,5 @@ public:
     void teacherAccess(void);
     void studentAccess(void);
 };
+
+#endif
