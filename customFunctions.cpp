@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-
+#include <cctype>
 #include "customFunctions.h"
 
 using namespace std;
@@ -33,4 +33,21 @@ bool valid_int(string theInput) {
 
     }
     return 1;
+}
+string validatestrings(string str) {
+    bool valid;
+    do {
+        getline(cin,str);
+        valid = true;
+        for (int i=0; i < str.length() && valid; ++i) {
+            if (!(isalpha(static_cast<unsigned char>(str[i])) || isspace(static_cast<unsigned char>(str[i])))) {
+                //checks for space and alphabetical input...
+                valid = false;
+                cout<<"Error!Please enter name correctly"<<endl;
+                //for retaking input and breaking out of loop
+                validatestrings(str);
+			}
+        }
+    } while (!valid);
+	return str;//the returned string is to be used later on... 
 }

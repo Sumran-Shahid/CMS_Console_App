@@ -10,5 +10,6 @@
 
 int get_int(int min, std::string prompt);
 bool valid_int(std::string theInput);
+std::string validatestrings(std::string str);
 
 #endif

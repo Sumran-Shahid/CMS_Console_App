@@ -94,7 +94,7 @@ void SignIn::adminAccess(void) {
     cout << endl;
 
     ifstream list;
-    list.open("CSvs/admins.csv");
+    list.open("CSVs/admins.csv");
 
     if (list.fail()) {
         cout << "ERROR! File not found" << endl;
@@ -245,12 +245,12 @@ void SignIn::newAdmin(void) {
         cout << "ERROR! File not found" << endl;
     }
     else { // if file is opened successfully
-        string name;
+		string name;
         string email;
         string str_id;
         int id;
         cout << "Please enter your name : ";
-        getline(cin, name);
+        name=validatestrings(name);//validates if input is letters or spaces only
         while (1) { // this loop keeps taking input from user for the CMS ID 
             cout << "Enter your 6 digit CMS ID : ";
             cin >> str_id;
@@ -288,12 +288,12 @@ void SignIn::newTeacher(void) {
         cout << "ERROR! File not found" << endl;
     }
     else { // if file is opened successfully
-        string name;
+		string name;
         string email;
         string str_id;
         int id;
         cout << "Please enter your name : ";
-        getline(cin, name);
+		name=validatestrings(name);//validates if input is letters or spaces only
         while (1) { // this loop keeps taking input from user for the CMS ID 
             cout << "Enter your 6 digit CMS ID : ";
             cin >> str_id;
@@ -322,10 +322,10 @@ void SignIn::newTeacher(void) {
 }
 
 
-// newTeacher function starts here -----------------------------------------------------------------------------------------------------------
+// newStudent function starts here -----------------------------------------------------------------------------------------------------------
 void SignIn::newStudent(void) {
     
-    ofstream list("CSVs/students.csv", ios::app);
+    ofstream list("CSVs/SecList.csv", ios::app);
     
     if (list.fail()) { // if file is not found
         cout << "ERROR! File not found" << endl;
@@ -336,7 +336,7 @@ void SignIn::newStudent(void) {
         string str_id;
         int id;
         cout << "Please enter your name : ";
-        getline(cin, name);
+        name=validatestrings(name);//validates if input is letters or spaces only
         while (1) { // this loop keeps taking input from user for the CMS ID 
             cout << "Enter your 6 digit CMS ID : ";
             cin >> str_id;
@@ -360,6 +360,6 @@ void SignIn::newStudent(void) {
 
         // all information has been collected from the user. Now this can be written in the file
         list << id << ',' << name << ',' << email << '\n';
-        cout << "You have signed in as an teacher.\n";
+        cout << "You have signed in as an student.\n";
     } // else block ends here
 }
