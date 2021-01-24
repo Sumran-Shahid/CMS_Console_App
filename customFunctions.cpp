@@ -2,6 +2,8 @@
 #include <string>
 #include <sstream>
 #include <cctype>
+#include <cstdlib>
+
 #include "customFunctions.h"
 
 using namespace std;
@@ -34,6 +36,7 @@ bool valid_int(string theInput) {
     }
     return 1;
 }
+
 string validatestrings(string str) {
     bool valid;
     do {
@@ -51,3 +54,15 @@ string validatestrings(string str) {
     } while (!valid);
 	return str;//the returned string is to be used later on... 
 }
+
+
+// this function just simply clears the console screen depending upon the underlying OS
+void clear_screen(void) {
+    #ifdef WINDOWS
+        std::system("cls");
+    #else
+        // Assume POSIX
+        std::system ("clear");
+    #endif
+}
+
