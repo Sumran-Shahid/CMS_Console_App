@@ -13,5 +13,6 @@ int get_int(int min, std::string prompt);
 bool valid_int(std::string theInput);
 std::string validatestrings(std::string str);
 void clear_screen(void);
+int _mkdir(const char *path);
 
 #endif

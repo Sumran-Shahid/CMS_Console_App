@@ -36,7 +36,7 @@ int main(void) {
             admin.menu();
             cout << "Press Return to continue.\n";
             cin.clear();
-            cin.ignore();
+            // cin.ignore();
             cin.get();
         }
     }
@@ -48,7 +48,7 @@ int main(void) {
             teacher.menu();
             cout << "Press Return to continue.\n";
             cin.clear();
-            cin.ignore();
+            // cin.ignore();
             cin.get();
         }
     }
@@ -61,7 +61,7 @@ int main(void) {
             student.menu();
             cout << "Press Return to continue.\n";
             cin.clear();
-            cin.ignore();
+            // cin.ignore();
             cin.get();
         }
     }

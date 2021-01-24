@@ -74,7 +74,7 @@ void Teacher::makeAssignment(void) {
 	ifstream        programs("./data/Programs.csv");//reading of program file
 	string          courseIDs[30], courseNames[30], Shortforms[30]; // these variables read data from Programs.csv to check if the entered program name exists
 
-	cout << "Which degree program you want to make assignment of?";
+	cout << "Which degree program you want to make assignment of?\n";
 
 	if (programs.fail()) {
 		cerr << "Programs.csv file not found.\n";
@@ -153,7 +153,7 @@ void Teacher::makeAssignment(void) {
 	string          coursePath = "./data/" + program + "/" + section + "/" + course; // path of the folder of the course
 	string          assignmentRecordPath = "./data/" + program + "/" + section + "/" + course + "/assignments.csv"; // path of the assignments.csv file that takes general record of the assignments
 	string          assignmentName; // name of the assignment taken from the teacher
-	fstream         assignments_record(assignmentRecordPath.c_str()); // assignments.csv for general record of the assignments created
+	fstream         assignments_record(assignmentRecordPath.c_str(), ios::app); // assignments.csv for general record of the assignments created
 
 	cout << "Please enter the name of the assignment.\n";
 	getline(cin, assignmentName);
@@ -188,7 +188,7 @@ void Teacher::makeAssignment(void) {
 			break;
 		}
 		else {
-			cout << "Please enter a valid number withing the given range.\n";
+			cout << "Please enter a valid number within the given range.\n";
 			continue;
 		}
 	} while(1);
@@ -337,7 +337,8 @@ void Teacher::makeQuiz(void) {
 			cout << "Please enter a valid number within the given range.\n";
 			continue;
 		}
-	} while(1);
+	}
+while(1);
 
 	if (quizFile.fail()) {
 		cerr << "Quiz file could not be made / opened.\n";
@@ -362,6 +363,7 @@ void Teacher::makeQuiz(void) {
 		}
 	}
 }
+
 
 
 // markAssignment function starts here=================================================================================================
@@ -458,9 +460,9 @@ void Teacher::markAssignment(void) {
             iterator++;
         }
 
-        cout << "Previously made assignments are :\n[";
+        cout << "Previously made assignments are :\n[ ";
         for (int j = 0; j < iterator; j++) { // read comment below
-            j != iterator - 1 ?cout << assignments[j] << ", ":cout << assignments[j] << "]\n";   // this thing is just for cosmetic purpose of the output
+            j != iterator - 1 ?cout << assignments[j] << " ":cout << assignments[j] << " ]\n";   // this thing is just for cosmetic purpose of the output
         }
         
 
@@ -495,16 +497,26 @@ void Teacher::markAssignment(void) {
             cerr<<"Assignment data file could not be opened"<<endl;
         }
         else{
-            string cms_id[60],studentname[60],maxmarks[60];
+            string cms_id[60],studentname[60],max_marks[60],enteredmarks,maxmarks[60];
             iterator=0;
             while (readassigndata.peek()!=EOF) { // this while loop reads data from the files and stores inside the arrays
                 getline(readassigndata, cms_id[iterator], ',');
                 getline(readassigndata, studentname[iterator], ',');
-                getline(readassigndata, maxmarks[iterator], '\n');    //storing data in array
+                getline(readassigndata, max_marks[iterator], ',');    //storing data in array
+				getline(readassigndata,enteredmarks,'\n');
                 iterator++;
             }
-            readassigndata.close();//closes the file after reading the data and putting in the array
-
+			readassigndata.close();
+			iterator=0;
+			do{
+			if(enteredmarks==""){//check if assignment is marked
+				ifstream readassigndata1(assigndir.c_str());
+				while (readassigndata1.peek()!=EOF) { // this while loop reads data from the files and stores inside the arrays
+                getline(readassigndata1, cms_id[iterator], ',');
+                getline(readassigndata1, studentname[iterator], ',');
+                getline(readassigndata1, maxmarks[iterator], '\n');    //storing data in array
+                iterator++;
+            }
             cout<<"Please enter marks of the following students:"<<endl;
             cout<<"CMS ID\t\tSTUDENT NAME\t\tMAX MARKS\t\tENTERED MARKS\n";
             string entered_marks[60];
@@ -540,8 +552,18 @@ void Teacher::markAssignment(void) {
                     }
                 }
             }
+			break;
         }
+		else 
+		cout<<"This assignment is already marked.Please enter the name of an un-marked assignment"<<endl;
+			cout << "Press Return to continue.\n";
+            cin.clear();
+            cin.get();
+			markAssignment();
+		}while(1);//assignemnt marking check loop
+		
 	}
+}
 }
 
 
@@ -639,11 +661,11 @@ void Teacher::markQuiz(void) {
             iterator++;
         }
 
-        cout << "Previously made quizzes are :\n[";
+        cout << "Previously made quizzes are :\n[ ";
         for (int j = 0; j < iterator; j++) { // read comment below
-            j != iterator - 1 ?cout << quizzes[j] << ", ":cout << quizzes[j] << "]\n";   // this thing is just for cosmetic purpose of the output
+            cout<<quizzes[j]<<" ";   // this thing is just for cosmetic purpose of the output
         }
-        
+        cout<<" ]\n";
 
         bool chk=false;
         do {
@@ -676,15 +698,26 @@ void Teacher::markQuiz(void) {
             cerr<<"Quiz data file could not be opened"<<endl;
         }
         else{
-            string cms_id[60],studentname[60],maxmarks[60];
+            string cms_id[60],studentname[60],max_marks[60],enteredmarks,maxmarks[60];
             iterator=0;
             while (readassigndata.peek()!=EOF) { // this while loop reads data from the files and stores inside the arrays
                 getline(readassigndata, cms_id[iterator], ',');
                 getline(readassigndata, studentname[iterator], ',');
-                getline(readassigndata, maxmarks[iterator], '\n');    //storing data in array
+                getline(readassigndata, max_marks[iterator], ',');    //storing data in array
+				getline(readassigndata, enteredmarks,'\n');
                 iterator++;
             }
             readassigndata.close();//closes the file after reading the data and putting in the array
+			do{
+				if(enteredmarks==""){
+					iterator=0;
+					ifstream readassigndata1(quizdir.c_str());
+				 while (readassigndata1.peek()!=EOF) { // this while loop reads data from the files and stores inside the arrays
+                getline(readassigndata1, cms_id[iterator], ',');
+                getline(readassigndata1, studentname[iterator], ',');
+                getline(readassigndata1, maxmarks[iterator], '\n');    //storing data in array
+                iterator++;
+            }
 
             cout<<"Please enter marks of the following students:"<<endl;
             cout<<"CMS ID\t\tSTUDENT NAME\t\tMAX MARKS\t\tENTERED MARKS\n";
@@ -720,10 +753,314 @@ void Teacher::markQuiz(void) {
                         writeassigndata<<cms_id[i]<<","<<studentname[i]<<","<<maxmarks[i]<<","<<entered_marks[i]<<endl;
                     }
                 }
-            }
+            }break;
         }
+			else
+				{cout<<"This quiz is already marked.Please enter a different name"<<endl;
+				cin.clear();
+				cin.get();
+				markQuiz();}
+	}while(1);
+		}
+		
+}
+}
+// markQuiz function ends here
+
+
+void Teacher::assignFinalexam(void)
+{
+	string          program;
+	ifstream        programs("./data/Programs.csv");//reading of program file
+	string          courseIDs[30], courseNames[30], Shortforms[30]; // these variables read data from Programs.csv to check if the entered program name exists
+
+	cout << "Which degree program you want to assign Final exam of?\n";
+
+	if (programs.fail()) {
+		cerr << "Programs.csv file not found.\n";
 	}
-}  // markQuiz function ends here
+
+	if (!programs.fail()) { // this conditional reads data from Programs.csv to check if the entered program name exists
+		int iterator = 0;
+		while (programs.peek()!=EOF) {
+			getline(programs, courseIDs[iterator], ',');
+			getline(programs, Shortforms[iterator], ',');
+			getline(programs, courseNames[iterator], '\n');//storing data in array
+			iterator++;}
+		bool chk=false;
+		do
+		{
+			getline(cin,program);
+			for(int i=0;i<iterator;i++)
+			{if(program == courseNames[i])
+			{chk=true;
+			break;}
+			else
+				continue;
+			}
+			if(chk)
+				break;
+			else
+			{cout<<"Please enter an existing degree program"<<endl;
+			continue;
+			}
+		}while(1);//degree porgram validation loop
+	}
+	programs.close();  // closing the programs.csv file after validating
+
+	string          section;
+	string          secname[3]; // this variable takes the names of the sections from the sectionslist.csv
+	string          path_of_sectionlist = "./data/" + program + "/Sectionlist.csv";
+	ifstream        sections(path_of_sectionlist.c_str());
+
+
+	int iterator = 0;
+	if(sections.fail()) {
+		cerr<<"Sections file couldnt be opened"<<endl;
+	}
+	else {
+		while(sections.peek()!=EOF){   //reading name of sections and storing in section array
+			getline(sections,secname[iterator],'\n');
+			iterator++;
+		}
+
+		cout<<"Enter name of section from the given options"<<"\n[";
+		for(int i=0;i<iterator;i++)
+			cout<<secname[i]<<" ";
+
+		cout<<"]"<<endl;
+		bool check=false;
+		do{
+			getline(cin,section);
+			for(int i=0;i<iterator;i++)
+			{
+				if (section==secname[i])
+				{
+					check=true;
+					break;
+				}
+				else	
+					continue;
+			}
+			if(check)
+				break;
+			else 
+				cout<<"Please enter a section from given choices"<<endl;
+			continue;
+		} while(1);//section validation loop
+	}
+
+
+	string          finalexampath = "./data/" + program + "/" + section + "/" + course + "/finalexam.csv"; // path of the finalexam file to be made
+	string          studentsPath = "./data/" + program + "/" + section + "/students.csv";
+	ofstream        finalexamFile(finalexampath.c_str()); // this is the main file to store the data of the assignment created by the teacher
+	fstream         students(studentsPath.c_str());
+	string          studentName;  // following three variables are to take the data of all the students from the list of the students from the csv file
+	string          studentID;
+	string          studentProgram;
+	string          maxMarks_str;   // maximum marks for the assignment are stored in this variable for validation before conversion
+	int             maxMarks;   // maximum marks for the assignment are stored in this variable
+
+	cout << "Enter the maximum marks for the Final exam (Max Marks:50-70)"<<endl;
+	do {
+		getline(cin, maxMarks_str);
+		if (valid_int(maxMarks_str)) {
+			stringstream maxMarksStream(maxMarks_str);
+			maxMarksStream >> maxMarks;
+			if ((maxMarks < 50) || (maxMarks > 70)) {
+				cout << "Please enter a number within the given range.\n";
+				continue;
+			}
+			break;
+		}
+		else {
+			cout << "Please enter a valid number within the given range.\n";
+			continue;
+		}
+	} while(1);
+
+	if (finalexamFile.fail()) {
+		cerr << "Assignment file could not be made / opened.\n";
+	}
+	else {
+		if (students.fail()) {
+			cerr << "File students.csv in section folder couldnt be opened\n";
+		}
+		else {
+			while(students.peek() != EOF) {
+				getline(students, studentID, ',');
+				getline(students, studentName, ',');
+				getline(students, studentProgram, '\n');
+				finalexamFile << studentID << "," << studentName << ',' << maxMarks << endl;
+			}
+			finalexamFile.close();
+		}
+	}
+
+
+
+
+}
+
+
+//markFinalexam function starts here
+void Teacher::markFinalexam(void){
+string          program;
+	ifstream        programs("./data/Programs.csv");//reading of program file
+	string          courseIDs[30], courseNames[30], Shortforms[30]; // these variables read data from Programs.csv to check if the entered program name exists
+	string          section;
+    string          assignname;
+    string          assigndir;
+	cout << "Which degree program you want to mark Final Exam of?\n";
+
+	if (programs.fail()) {
+		cerr << "Programs.csv file not found.\n";
+	}
+
+	if (!programs.fail()) { // this conditional reads data from Programs.csv to check if the entered program name exists
+		int iterator = 0;
+		while (programs.peek()!=EOF) {
+			getline(programs, courseIDs[iterator], ',');
+			getline(programs, Shortforms[iterator], ',');
+			getline(programs, courseNames[iterator], '\n');//storing data in array
+			iterator++;}
+		bool chk=false;
+		do
+		{
+			getline(cin,program);
+			for(int i=0;i<iterator;i++)
+			{if(program == courseNames[i])
+			{chk=true;
+			break;}
+			else
+				continue;
+			}
+			if(chk)
+				break;
+			else
+			{cout<<"Please enter an existing degree program"<<endl;
+			continue;
+			}
+		}while(1);  //degree porgram validation loop
+    }
+	string          secname[3]; // this variable takes the names of the sections from the sectionslist.csv
+	string          path_of_sectionlist = "./data/" + program + "/Sectionlist.csv";
+	ifstream        sections(path_of_sectionlist.c_str());
+
+
+	int iterator = 0;
+	if(sections.fail()) {
+		cerr<<"Sections file couldnt be opened"<<endl;
+	}
+	else {
+		while(sections.peek()!=EOF){   //reading name of sections and storing in section array
+			getline(sections,secname[iterator],'\n');
+			iterator++;
+		}
+
+		cout<<"Enter name of section from the given options"<<"\n[";
+		for(int i=0;i<iterator;i++)
+			cout<<secname[i]<<" ";
+
+		cout<<"]"<<endl;
+		bool check=false;
+		do{
+			getline(cin,section);
+			for(int i=0;i<iterator;i++)
+			{
+				if (section==secname[i])
+				{
+					check=true;
+					break;
+				}
+				else	
+					continue;
+			}
+			if(check)
+				break;
+			else 
+				cout<<"Please enter a section from given choices"<<endl;
+			continue;
+		} while(1);//section validation loop
+	}
+	sections.close();
+        
+        assigndir="./data/"+program+"/"+section+"/"+course+"/"+"finalexam.csv";//directory of Final exam
+        ifstream        readfinalexamdata(assigndir.c_str());
+        
+        if(readfinalexamdata.fail()) {
+            cerr<<"Final exam data file could not be opened"<<endl;
+        }
+        else{
+            string cms_id[60],studentname[60],max_marks,enteredmarks,maxmarks[60];
+            iterator=0;
+            while (readfinalexamdata.peek()!=EOF) { // this while loop reads data from the files and stores inside the arrays
+                getline(readfinalexamdata, cms_id[iterator], ',');
+                getline(readfinalexamdata, studentname[iterator], ',');
+                getline(readfinalexamdata, max_marks, ',');    //storing data in array
+				getline(readfinalexamdata,enteredmarks,'\n');
+                iterator++;
+            }
+			if(max_marks=="")
+				cout<<"Final exam has not been assigned to this section"<<endl;
+			else{
+			readfinalexamdata.close();
+			iterator=0;
+			do{
+			if(enteredmarks==""){//check if assignment is marked
+				ifstream readfinalexamdata1(assigndir.c_str());
+				while (readfinalexamdata1.peek()!=EOF) { // this while loop reads data from the files and stores inside the arrays
+                getline(readfinalexamdata1, cms_id[iterator], ',');
+                getline(readfinalexamdata1, studentname[iterator], ',');
+                getline(readfinalexamdata1, maxmarks[iterator], '\n');    //storing data in array
+                iterator++;
+            }
+            cout<<"Please enter marks of the following students in Final exam:"<<endl;
+            cout<<"CMS ID\t\tSTUDENT NAME\t\tMAX MARKS\t\tENTERED MARKS\n";
+            string entered_marks[60];
+            
+            for(int i=0;i<iterator;i++) {
+                cout<<cms_id[i]<<"\t\t"<<studentname[i]<<"\t\t\t"<<maxmarks[i]<<"\t\t\t";
+                do{
+                    getline(cin,entered_marks[i]);
+
+                    if(valid_int(entered_marks[i])) {
+                        stringstream marks_str(entered_marks[i]);
+                        int marks;
+                        marks_str>>marks;
+                        stringstream maxmarks_str(maxmarks[i]);
+                        int max_marks;
+                        maxmarks_str>>max_marks;
+                        if(marks<0||marks>max_marks){
+                            cout<<"Please enter marks within the set maximum marks"<<endl;
+                            continue;
+                        }
+                        else
+                            break;
+                    }
+                } while(1);
+
+				ofstream writeFinalexamdata(assigndir.c_str(),ios::out);
+                if(writeFinalexamdata.fail()){
+                    cerr<<"Assignment file could not be opened in writing marks"<<endl;
+                }
+                else {
+                    for(i=0;i<iterator;i++) {
+                        writeFinalexamdata<<cms_id[i]<<","<<studentname[i]<<","<<maxmarks[i]<<","<<entered_marks[i]<<endl;
+                    }
+                }
+            }
+			break;
+        }
+		else 
+		{cout<<"This Final exam is already marked."<<endl;
+			break;}
+		}while(1);//assignemnt marking check loop
+		
+	}
+		}
+		
+}
 
 
 // resultCard function starts here=================================================================================================
@@ -858,7 +1195,8 @@ void Teacher::resultCard(void) {
     do {
         cout << "What do you see the result of?\n"
             << "[1] - Assignment\n"
-            << "[2] - Quiz\n";
+            << "[2] - Quiz\n"
+			<< "[3] - FinalExam\n";
         cin >> choice;
         
         if (choice == "1") {
@@ -891,6 +1229,10 @@ void Teacher::resultCard(void) {
             }
             break;
         }
+		else if (choice == "3") {
+			nameOfComponent="finalexam";
+            break;
+        }
         else {
             cout << "Please enter a valid input from the given choices.\n";
         }
@@ -921,7 +1263,7 @@ void Teacher::resultCard(void) {
     stringstream    maxMarksStream(maxMarks[0]);
     int             maxMarks_int;
     int             givenMarks_int;  // to be used in the loop when calculating the grades and percentage
-    double          percentage;  // to be used in the loop when calculating the grades and percentage
+    int             percentage;  // to be used in the loop when calculating the grades and percentage
     maxMarksStream >> maxMarks_int;
 
     // calculating the grades and percentages and storing in the arrays
@@ -955,6 +1297,8 @@ void Teacher::resultCard(void) {
     for (int x = 0; x < result_iterator; x++) {
         cout << cmsIDs[x]<<"\t\t";
 		cout.width(30);
-        cout << std::left << names[x] <<"\t\t"<< givenMarks[x] << "\t\t   " << maxMarks[x] << "\t\t\t   " << percentages[x] << "\t\t\t  " << grades[x] << "\n";
+        cout << std::left << names[x] <<"\t\t"<< givenMarks[x] << "\t\t   " << maxMarks[x] << "\t\t\t   " << percentages[x] << "%\t\t\t  " << grades[x] << "\n";
     }
+	cin.get();
+
 }

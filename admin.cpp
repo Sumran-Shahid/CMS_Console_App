@@ -2,8 +2,6 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <direct.h>
-#include <filesystem>
 #include <stdio.h>
 
 #include "customFunctions.h"
@@ -300,7 +298,7 @@ void Admin::newCourse(void) {
 // viewCourses function starts here============================================================================================
 void Admin::viewCourses(void) {
 	string program_entered;
-	cout<<"Please enter the name of the degree program whose courses u wish to view:"<<endl;//input for degree name
+	cout<<"Please enter the name of the degree program whose courses you wish to view:"<<endl;//input for degree name
 	ifstream programs("./data/Programs.csv");//reading of program file
 	string courseIDs[30], shortForms[30], courseNames[30];
 	if (!programs.fail()) {
@@ -359,7 +357,6 @@ do {
 		while(1);
 cout<<"Please enter the teacher's name:\n";
 getline(cin,name);
-cout<<"Please enter the teacher's subject/course:\n";
 	cout<<"Please enter the name of the course/subject u wish to assign"<<endl;//input for degree name
 	ifstream programs("./data/Courses.csv");//reading of program file
 	string courseIDs[30],courseNames[30];

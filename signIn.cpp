@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <conio.h>
 
 #include "signIn.h"
 #include "customFunctions.h"
@@ -181,7 +180,7 @@ void SignIn::studentAccess(void) {
                 id_found = true;  // variable set to true as the ID has been found
                 cout << "You have signed in as a Student.\n";
                 student_name = name;
-                student_name = cmsID;
+                student_id = cmsID;
             }
 
 

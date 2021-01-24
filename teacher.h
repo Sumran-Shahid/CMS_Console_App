@@ -11,8 +11,9 @@ class Teacher {
         void makeQuiz(void);
         void markAssignment(void);
         void markQuiz(void);
+		void assignFinalexam(void);
+		void markFinalexam(void);
         void resultCard(void);
+
 };
-
-
 #endif

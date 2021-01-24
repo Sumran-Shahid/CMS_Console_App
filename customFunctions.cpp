@@ -3,6 +3,12 @@
 #include <sstream>
 #include <cctype>
 #include <cstdlib>
+#include <sys/stat.h>
+
+// for windows mkdir
+#ifdef _WIN32
+#include <direct.h>
+#endif
 
 #include "customFunctions.h"
 
@@ -58,11 +64,30 @@ string validatestrings(string str) {
 
 // this function just simply clears the console screen depending upon the underlying OS
 void clear_screen(void) {
-    #ifdef WINDOWS
-        std::system("cls");
-    #else
-        // Assume POSIX
-        std::system ("clear");
-    #endif
+    // #ifdef WINDOWS
+    //     std::system("cls");
+    // #else
+    //     // Assume POSIX
+    //     std::system ("clear");
+    // #endif
+    system("cls||clear");
 }
 
+
+/**
+ * Portable wrapper for mkdir. Internally used by mkdir()
+ * @param[in] path the full path of the directory to create.
+ * @return zero on success, otherwise -1.
+ */
+
+int _mkdir(const char *path) {
+    #ifdef _WIN32
+        return ::_mkdir(path);
+    #else
+    #if _POSIX_C_SOURCE
+        return ::mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    #else
+        return ::mkdir(path, 0755); // not sure if this works on mac
+    #endif
+    #endif
+}

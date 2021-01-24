@@ -238,10 +238,8 @@ void Student::showResult(void) {
                 // now this is the path of the assignment file we need to open to fetch student data
                 string          assignmentFilepath = "./data/" + program + "/" + section + "/" + courseName + "/" + assignmentName + ".csv";
                 ifstream        assignmentFile(assignmentFilepath.c_str());
-                if (assignmentFile.fail()) {
-                    cerr << "Assignment file could not be opened.\n";
-                }
-                else {
+                if (!(assignmentFile.fail()))
+                {
                     // now these variable are to store the information of the data of the student from the file
                     string          id;
                     string          name;
@@ -301,7 +299,9 @@ void Student::showResult(void) {
                     }
 
                     // at this point we have the cms id, name, assignment name, max marks, obtained marks, percentage and grade
-                    cout << assignmentName << "\t\t" << obtained_int << "\t\t" << maxMarks_int << "\t\t" << percentage << "\t\t" << grade << endl;
+		cout <<assignmentName<<"\t   ";
+		cout.width(2);
+        cout << std::left << obtained_int << "\t\t   " << maxMarks_int << "\t\t    " << percentage << "\t\t   " << grade << endl;
                 }
                 assignmentFile.close();
                 continue; // continue to the next assignment file
@@ -325,10 +325,7 @@ void Student::showResult(void) {
                 // now this is the path of the assignment file we need to open to fetch student data
                 string          quizFilepath = "./data/" + program + "/" + section + "/" + courseName + "/" + quizName + ".csv";
                 ifstream        quizFile(quizFilepath.c_str());
-                if (quizFile.fail()) {
-                    cerr << "Quiz file could not be opened.\n";
-                }
-                else {
+                if (!(quizFile.fail())) {
                     // now these variable are to store the information of the data of the student from the file
                     string          id;
                     string          name;
@@ -388,46 +385,115 @@ void Student::showResult(void) {
                     }
 
                     // at this point we have the cms id, name, assignment name, max marks, obtained marks, percentage and grade
-                    cout << quizName << "\t\t" << obtained_int << "\t\t" << maxMarks_int << "\t\t" << percentage << "\t\t" << grade << endl;
+		cout <<quizName<<"\t   ";
+		cout.width(2);
+        cout << std::left << obtained_int << "\t\t   " << maxMarks_int << "\t\t    " << percentage << "\t\t   " << grade << endl;
                 }
                 quizFile.close();
                 continue; // continue to the next assignment file
             }
         } // else block of quiz record ending here
         quizzesRecord.close();
+
+
+	//doing the same thing for Final exam
+
+                string          FinalexamFilepath = "./data/" + program + "/" + section + "/" + courseName + "/finalexam.csv";
+                ifstream        FinalexamFile(FinalexamFilepath.c_str());
+                if (FinalexamFile.fail()) {
+                    cerr << "No Final-exam record was found!\n";
+                }
+                else {
+                    // now these variable are to store the information of the data of the student from the file
+                    string          id;
+                    string          name;
+                    string          maxMarks_str;
+                    string          obtained_str;
+                    // now reading the assignment file and checking the line by line info and matching with the student info
+                    while(FinalexamFile.peek() != EOF) {
+                        getline(FinalexamFile, id, ',');
+                        getline(FinalexamFile, name, ',');
+                        getline(FinalexamFile, maxMarks_str, ',');
+                        getline(FinalexamFile, obtained_str, '\n');
+                        if (id == cms_id) { // cms_id is the already defined class attribute
+                            break;
+                        }
+                        else {
+                            continue;
+                        }
+                    }
+                    // after breaking out from the while loop, we have the student data now
+                    int             maxMarks_int;
+                    int             obtained_int;
+                    double          percentage;
+                    string          grade;
+
+                    // converting max marks to int object using stringstream pointer
+                    stringstream *maxMarksStream_ptr = new stringstream;
+                    maxMarksStream_ptr->str(maxMarks_str);
+                    *maxMarksStream_ptr >> maxMarks_int;
+                    delete(maxMarksStream_ptr);
+
+                    // converting obtained marks to int object using stringstream pointer
+                    stringstream *obtMarksStream_ptr = new stringstream;
+                    obtMarksStream_ptr->str(obtained_str);
+                    *obtMarksStream_ptr >> obtained_int;
+                    delete(obtMarksStream_ptr);
+
+                    // calculating percentage and grade now
+                    percentage = (double(obtained_int) / double(maxMarks_int)) * 100.0;
+                    // Grades -->  (A (>85) B+(75-85) B(65-75) C+(55-65) C(45-55) F(<45))
+                    if (percentage > 85.0) {  // A grade
+                        grade = "A";
+                    }
+                    else if ((percentage < 85.0) && (percentage >= 75.0)) {  // B+ grade
+                        grade = "B+";
+                    }
+                    else if ((percentage < 75.0) && (percentage >= 65.0)) {  // B grade
+                        grade = "B";
+                    }
+                    else if ((percentage < 65.0) && (percentage >= 55.0)) {   // C+ grade
+                        grade = "C+";
+                    }
+                    else if ((percentage < 55.0) && (percentage >= 45.0)) {   // C grade
+                        grade = "C";
+                    }
+                    else {   // F grade
+                        grade = "F";
+                    }
+
+                    // at this point we have the cms id, name, assignment name, max marks, obtained marks, percentage and grade
+
+                cout <<"FinalExam"<<"\t   ";
+                cout.width(2);
+                cout << std::left << obtained_int << "\t\t   " << maxMarks_int << "\t\t    " << percentage << "\t\t   " << grade << endl;
+                }
+            FinalexamFile.close();
+        } // else block of quiz record ending here
+		courseNamesFile.close();
     }  // else block of coursenamesrecord file ends here
-    courseNamesFile.close();
-}
+
 // show result card function ends here
 
 
 /*
-
 this is the pattern of the result card
-
-Name of Student : _____
-CMS ID          : _____
-
-Course Name     : _____
-
+Name of Student : ___
+CMS ID          : ___
+Course Name     : ___
 Tasks           Obtained Marks          Max Marks           Percentage            Grade
-
 assings         .                       .                   .                     .
 assings         .                       .                   .                     .
 assings         .                       .                   .                     .
 quizzes         .                       .                   .                     .
 quizzes         .                       .                   .                     .
 quizzes         .                       .                   .                     .
-
-Course Name     : _____
-
+Course Name     : ___
 Tasks           Obtained Marks          Max Marks           Percentage            Grade
-
 assings         .                       .                   .                     .
 assings         .                       .                   .                     .
 assings         .                       .                   .                     . 
 quizzes         .                       .                   .                     .
 quizzes         .                       .                   .                     .
 quizzes         .                       .                   .                     .
-
 */
