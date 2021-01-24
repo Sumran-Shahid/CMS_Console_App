@@ -22,12 +22,15 @@ void Teacher::menu(void) {
 		 << "[2] - Assign a quiz.\n"
 		 << "[3] - Mark an assignment.\n"
 		 << "[4] - Mark a quiz.\n"
-		 << "[5] - Visualize the result card.\n"
-		 << "[6] - Exit the program.\n"
+		 << "[5] - Assign Final exam.\n"
+		 << "[6] - Mark Final exam.\n"
+		 << "[7] - Visualize the result card.\n"
+		 << "[8] - Return to main menu.\n"
+		 << "[9] - Exit the program.\n"
 		 << "--> ";
 
 	string choice_str;
-	int choice;
+	
 	do {
 		getline(cin, choice_str);
 		if (valid_int(choice_str)) {
@@ -55,9 +58,17 @@ void Teacher::menu(void) {
 		markQuiz();
 		break;
 	case 5:
-		resultCard();
+		assignFinalexam();
 		break;
 	case 6:
+		markFinalexam();
+		break;
+	case 7:
+		resultCard();
+		break;
+	case 8:
+		break;
+	case 9:
 		exit(1);
 		break;
     default:

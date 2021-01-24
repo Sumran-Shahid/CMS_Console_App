@@ -6,6 +6,7 @@
 class Teacher {
     public:
         std::string course;
+        int choice;
         void menu(void);
         void makeAssignment(void);
         void makeQuiz(void);

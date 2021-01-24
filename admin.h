@@ -3,8 +3,8 @@
 #pragma once
 
 class Admin {
-    private:
     public:
+        int  choice;
         void menu(void);
         void newProgram(void);
         void viewPrograms(void);

@@ -15,11 +15,12 @@ void Student::menu(void) {
     cout << "What action do you want to perform?\n"
 		 << "[1] - Show enrolled courses.\n"
 		 << "[2] - Show result card of current semester.\n"
-		 << "[3] - Exit the program.\n"
+		 << "[3] - Return to main menu.\n"
+		 << "[4] - Exit the program.\n"
          << "--> ";
 
     string choice_str;
-	int choice;
+	
 	do {
 		getline(cin, choice_str);
 		if (valid_int(choice_str)) {
@@ -41,6 +42,8 @@ void Student::menu(void) {
 		showResult();
 		break;
 	case 3:
+		break;
+	case 4:
 		cout << "Exiting Program...\n";
         exit(1);
 		break;

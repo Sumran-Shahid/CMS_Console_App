@@ -6,6 +6,7 @@
 
 class Student {
     public:
+    int choice;
     std::string studentName;
     std::string cms_id;
     void menu(void);

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstdlib>
-
 #include "customFunctions.h"
 #include "signIn.h"
 #include "admin.h"
@@ -32,12 +31,16 @@ int main(void) {
     if (sign_in.access_lvl == 1) {
         Admin admin;
         while (1) {
-            clear_screen();
+			clear_screen();
             admin.menu();
-            cout << "Press Return to continue.\n";
+			if(admin.choice!=7)
+            {cout << "Press Return to continue.\n";
             cin.clear();
-            // cin.ignore();
-            cin.get();
+			cin.get();}
+			else
+			{clear_screen();
+			main();
+			}
         }
     }
     else if (sign_in.access_lvl == 2) {
@@ -46,10 +49,14 @@ int main(void) {
         while (1) {
             clear_screen();
             teacher.menu();
-            cout << "Press Return to continue.\n";
+			if(teacher.choice!=8)
+            {cout << "Press Return to continue.\n";
             cin.clear();
-            // cin.ignore();
-            cin.get();
+			cin.get();}
+			else
+			{clear_screen();
+			main();
+			}
         }
     }
     else if (sign_in.access_lvl == 3) {
@@ -57,12 +64,16 @@ int main(void) {
         student.studentName = sign_in.student_name;
         student.cms_id = sign_in.student_id;
         while(1) {
-            clear_screen();
+           clear_screen();
             student.menu();
-            cout << "Press Return to continue.\n";
+			if(student.choice!=3)
+            {cout << "Press Return to continue.\n";
             cin.clear();
-            // cin.ignore();
-            cin.get();
+			cin.get();}
+			else
+			{clear_screen();
+			main();
+			}
         }
     }
 

@@ -13,7 +13,7 @@ using namespace std;
 // menu function starts here============================================================================================
 void Admin::menu(void) {
     string  choice_str;
-	int choice;
+	
 	cout << "What action do you want to perform?\n"
 		<< "[1] - Create a Degree Program.\n"
 		<< "[2] - View available Degree Programs.\n"
@@ -21,7 +21,8 @@ void Admin::menu(void) {
 		<< "[4] - View available Courses.\n"
 		<< "[5] - Assign Teachers to courses\n"
 		<< "[6] - Enroll new students to courses and sections\n"
-		<< "[7] - Exit Program.\n"
+		<< "[7] - Return to main menu\n"
+		<< "[8] - Exit Program.\n"
 		<< "--> ";
 	getline(cin, choice_str);
 	cout << endl;
@@ -55,6 +56,8 @@ void Admin::menu(void) {
 		enrollStudents();
 		break;
 	case 7:
+		break;
+	case 8:
 		exit(1);
 		break;
 	default:
