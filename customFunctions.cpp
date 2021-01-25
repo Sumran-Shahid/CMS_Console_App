@@ -64,7 +64,7 @@ string validatestrings(string str) {
 
 // this function just simply clears the console screen depending upon the underlying OS
 void clear_screen(void) {
-    system("cls||clear");
+    system("clear||cls");
 }
 
 
@@ -74,7 +74,7 @@ void clear_screen(void) {
  * @return zero on success, otherwise -1.
  */
 
-int _mkdir(const std::string path) {
+int _makedir(const char* path) {
     #ifdef _WIN32
         return ::_mkdir(path);
     #else

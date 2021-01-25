@@ -72,7 +72,7 @@ void Admin::menu(void) {
 void Admin::newProgram() {
 	string shortForm, programID_str, program_entered, parent= "./data/"; //parent directory for folder
 
-	_mkdir("./data");
+	_makedir("./data");
 
 	cin.clear();
 	cout<<"Enter degree program:"<<endl;
@@ -89,9 +89,9 @@ void Admin::newProgram() {
 		}
 		// now this part is to check if the entered code already exists or not
 		string check_course_id, check_course_name;
-		ifstream courses("./data/Programs.csv");
+		ifstream courses("./data/Programs.dat");
 		if (courses.fail())
-			cout << "Failed to open Program.csv file.\n";
+			cout << "Failed to open Program.dat file.\n";
 
 		bool check = false;
 		if(!courses.fail()) {
@@ -107,7 +107,7 @@ void Admin::newProgram() {
 			}
 
 			else {
-				ofstream programs("./data/Programs.csv",ios::app);
+				ofstream programs("./data/Programs.dat",ios::app);
 				programs << programID_str <<','<<shortForm<<','<<program_entered<<endl;//writing of new course in append mode
 				cout << "The new degree program has been created." << endl;
 				break;
@@ -117,7 +117,7 @@ void Admin::newProgram() {
 	} while(1);
 	string p = parent + program_entered;
 
-	if (_mkdir(p.c_str()) != 0) {
+	if (_makedir(p.c_str()) != 0) {
 		cerr<<"Failed to create program directory."<<endl;  // failsafe in case folder is not created 
 	}
 	string l,h,ref;
@@ -140,59 +140,33 @@ void Admin::newProgram() {
 		l = p;
 		cout << "Enter name of section..." << endl;
 		cin >> ref;	
-		string secdir=p+"/Sectionlist.csv";
+		string secdir=p+"/Sectionlist.dat";
 		ofstream sectionrecord(secdir.c_str(),ios::app);//file for section record
 		sectionrecord<<ref<<endl;
-				h = "Section " + ref;
-		l = p + "/" + ref;  //directory for sections stored in string
-		_mkdir(l.c_str());  //c.str converts strings into char based readable format
-		string courses="./data/"+program_entered+"/Courses.csv";
-		ifstream cor("./data/Courses.csv");//cor==courses for reading
-		if(cor.good())
-		{   string course_id1; //variable for getline
-		string course_name1; //variable for getline
-		string course_id[10];
-		string course_name[10];
-		int i=0;
-
-		while(!(cor.eof()))
-		{
-			getline(cor,course_name1,',');
-			getline(cor,course_id1,'\n');
-			course_id[i]=course_id1;
-			course_name[i]=course_name1;
-			i++;
-		}
-		for(int k=0;k<i;k++)
-		{
-			string f=l+"/"+course_id[k];
-			_mkdir(f.c_str());
-			string q=f+"/quizes.csv";//for quizes
-			string a=f+"/assignments.csv";//for assignments
-			ofstream quiz(q.c_str());
-			ofstream assign(a.c_str());
-		} // newProgram function ends here
-		}
-		cor.close();
 	}
-} // newProgram function ends here
+	cin.get(); // stop the screen here
+}
 
 
 // vewPrograms function starts here============================================================================================
 void Admin::viewPrograms(void){
-	ifstream programs("./data/Programs.csv");
-	string courseIDs[30], shortForms[30], courseNames[30];
+	ifstream programs("./data/Programs.dat");
+	string courseIDs[30], shortForms, courseNames[30];
 	if (!programs.fail()) {
 		int iterator = 0;
-		while (!programs.eof()) {
+		while (programs.peek() != EOF) {
 			getline(programs, courseIDs[iterator], ',');
-			getline(programs, shortForms[iterator], ',');
+			getline(programs, shortForms, ',');
 			getline(programs, courseNames[iterator], '\n');
 			iterator++;
 		}
+		if (shortForms == "") {
+			cout << "No programs have been made yet.\n";
+			return;
+		}
 		cout << "\n" << "Course IDs\tShort Forms\tName of Course\n";
 		for (int i = 0; i < iterator; i++) {
-			cout << courseIDs[i] << "\t\t" << shortForms[i] << "\t\t" << courseNames[i] << endl;
+			cout << courseIDs[i] << "\t\t" << shortForms << "\t\t" << courseNames[i] << endl;
 		}
 	}
 	programs.close();
@@ -202,8 +176,7 @@ void Admin::viewPrograms(void){
 // newCourse function starts here============================================================================================
 void Admin::newCourse(void) {
 	std::string courseID_str, course_entered,program_entered;//declaring variables
-	cout<<"Please enter the name of the degree program for new course"<<endl;//input for degree name
-	ifstream programs("./data/Programs.csv");//reading of program file
+	ifstream programs("./data/Programs.dat");//reading of program file
 	string courseIDs[30], shortForms[30], courseNames[30];
 	if (!programs.fail()) {
 		int iterator = 0;
@@ -211,8 +184,15 @@ void Admin::newCourse(void) {
 			getline(programs, courseIDs[iterator], ',');
 			getline(programs, shortForms[iterator], ',');
 			getline(programs, courseNames[iterator], '\n');//storing data in array
-			iterator++;}
+			iterator++;
+		}
 		bool chk=false;
+		cout << "Available degree programs are :\n[ ";
+		for (int i = 0; i < iterator; i++) {
+			cout << courseNames[i] << " ";
+		}
+		cout << " ]\n";
+		cout<<"Please enter the name of the degree program for new course"<<endl;//input for degree name
 		do
 		{getline(cin,program_entered);
 		for(int i=0;i<iterator;i++)
@@ -232,8 +212,8 @@ void Admin::newCourse(void) {
 	}//verification of degree program
 	cout<<"Enter the name of new course:"<<endl;//name of course
 	getline(cin, course_entered);
-	string course_dir="./data/"+program_entered+"/Courses.csv";
-	ofstream newcourse(course_dir.c_str(),ios::app);//for creating a course.csv file for courses
+	string course_dir="./data/"+program_entered+"/Courses.dat";
+	ofstream newcourse(course_dir.c_str(),ios::app);//for creating a course.dat file for courses
 	cout << "Enter 4-digit course code :" << endl;
 	do {
 		getline(cin, courseID_str);
@@ -247,7 +227,7 @@ void Admin::newCourse(void) {
 		string check_course_id, check_course_name;
 		ifstream courses(course_dir.c_str());
 		if (courses.fail())
-			cout << "Failed to open Course.csv file.\n";
+			cout << "Failed to open Course.dat file.\n";
 
 		bool check = false;
 		if(!courses.fail()) {
@@ -263,9 +243,9 @@ void Admin::newCourse(void) {
 			}
 
 			else {
-				string coursedirectory="./data/"+program_entered+"/"+"Courses.csv";
+				string coursedirectory="./data/"+program_entered+"/"+"Courses.dat";
 				ofstream programs(coursedirectory.c_str(), ios::app);//specific record of courses
-				ofstream generalcourses("./data/Courses.csv",ios::app);//general record of courses
+				ofstream generalcourses("./data/Courses.dat",ios::app);//general record of courses
 				programs << courseID_str <<','<< course_entered << endl;//writing of new course in append mode
 				generalcourses<< courseID_str <<','<< course_entered << endl;
 				cout << "The new course has been created." << endl;
@@ -275,7 +255,7 @@ void Admin::newCourse(void) {
 			}
 		}
 	} while(1);//course id validation loop
-	string sectiondir="./data/"+program_entered+"/Sectionlist.csv";//directory of section list
+	string sectiondir="./data/"+program_entered+"/Sectionlist.dat";//directory of section list
 	string secname[3];//array for sections
 	ifstream sectionlist(sectiondir.c_str());//reading section file of the degree programme
 	int iterator=0;
@@ -289,11 +269,13 @@ void Admin::newCourse(void) {
 	for(int i=0;i<iterator;i++)//loop for running the section array
 	{
 		string newdir="./data/"+program_entered+"/"+secname[i]+"/"+course_entered;//directory for new course in each section
-		_mkdir(newdir.c_str());//make directory function
-		string quizdir=newdir+"/quizes.csv";//directory for respective quizes
-		string assigndir=newdir+"/assignments.csv";//directory for respective assignments
-		ofstream quizes(quizdir.c_str(),ios::app);//creating a file of quizes.csv
+		_makedir(newdir.c_str());//make directory function
+		string quizdir=newdir+"/quizes.dat";//directory for respective quizes
+		string assigndir=newdir+"/assignments.dat";//directory for respective assignments
+		ofstream quizes(quizdir.c_str(),ios::app);//creating a file of quizes.dat
 		ofstream assignments(assigndir.c_str(),ios::app);//creating an assignment file
+		string finalexamdir=newdir+"/finalexam.dat";
+		ofstream finalexam(finalexamdir.c_str(),ios::app);
 	}
 } // newCourses func ends here
 
@@ -301,41 +283,54 @@ void Admin::newCourse(void) {
 // viewCourses function starts here============================================================================================
 void Admin::viewCourses(void) {
 	string program_entered;
-	cout<<"Please enter the name of the degree program whose courses you wish to view:"<<endl;//input for degree name
-	ifstream programs("./data/Programs.csv");//reading of program file
-	string courseIDs[30], shortForms[30], courseNames[30];
+	ifstream programs("./data/Programs.dat");//reading of program file
+	string courseIDs[30], shortForms, courseNames[30];
 	if (!programs.fail()) {
 		int iterator = 0;
 		while (!programs.eof()) {
 			getline(programs, courseIDs[iterator], ',');
-			getline(programs, shortForms[iterator], ',');
+			getline(programs, shortForms, ',');
 			getline(programs, courseNames[iterator], '\n');//storing data in array
-			iterator++;}
-		bool chk=false;
-		do
-		{getline(cin,program_entered);
-		for(int i=0;i<iterator;i++)
-		{if(program_entered==courseNames[i])
-		{chk=true;
-		break;}
-		else
-			continue;
+			iterator++;
 		}
-		if(chk)
-			break;
-		else
-		{cout<<"Please enter an existing degree program"<<endl;
-		continue;
+		if (shortForms == "") {
+			cout << "No programs have been made yet.\n";
+			return;
 		}
-		}while(1);//degree program validation loop
-		string course_id,course_name;
-		string course_dir="./data/"+program_entered+"/Courses.csv";
-		ifstream courses(course_dir.c_str());
-		cout << "Course ID\tCourse name\n";
-		if(!courses.fail()) {
-			while(getline(courses,course_id,',')&&getline(courses,course_name,'\n'))
-				cout << course_id << "\t\t" << course_name << endl;
-			cout << endl;
+		else {
+			bool chk=false;
+			cout << "Available degree programs are :\n[ ";
+			for (int i = 0; i < iterator; i++) {
+				cout << courseNames[i] << " ";
+			}
+			cout << " ]\n";
+			cout<<"Please enter the name of the degree program for new course"<<endl;//input for degree name
+			do
+			{
+				getline(cin,program_entered);
+				for(int i=0;i<iterator;i++)
+				{if(program_entered==courseNames[i])
+				{chk=true;
+				break;}
+				else
+					continue;
+				}
+				if(chk)
+					break;
+				else
+				{cout<<"Please enter an existing degree program"<<endl;
+				continue;
+				}
+			}while(1);//degree program validation loop
+			string course_id,course_name;
+			string course_dir="./data/"+program_entered+"/Courses.dat";
+			ifstream courses(course_dir.c_str());
+			cout << "Course ID\tCourse name\n";
+			if(!courses.fail()) {
+				while(getline(courses,course_id,',')&&getline(courses,course_name,'\n'))
+					cout << course_id << "\t\t" << course_name << endl;
+				cout << endl;
+		}
 		}
 	}
 } // viewCourses func ends here
@@ -343,12 +338,12 @@ void Admin::viewCourses(void) {
 
 // assign teacher function==================================================================================
 void Admin::assignTeachers(){
-	ofstream teachers("./data/Teachers.csv",ios::app);
+	ofstream teachers("./data/Teachers.dat",ios::app);
 	if(teachers.fail())
 		cerr<<"File could not be opened."<<endl;
-string cms_id,name,course_entered;
-cout<<"Please enter the teacher's 6-digit cms id:\n";
-do {
+	string cms_id,name,course_entered;
+	cout<<"Please enter the teacher's 6-digit cms id:\n";
+	do {
 		getline(cin,cms_id);
 		if (cms_id.size()!= 6) // this loop keeps taking input from the user until he enters a 4 digit number
 			{cout << "Please enter a 6-digit course code.\n";//restriction on course id...
@@ -358,10 +353,9 @@ do {
 
 		}
 		while(1);
-cout<<"Please enter the teacher's name:\n";
-getline(cin,name);
-	cout<<"Please enter the name of the course/subject u wish to assign"<<endl;//input for degree name
-	ifstream programs("./data/Courses.csv");//reading of program file
+	cout<<"Please enter the teacher's name:\n";
+	getline(cin,name);
+	ifstream programs("./data/Courses.dat");//reading of program file
 	string courseIDs[30],courseNames[30];
 	if (!programs.fail()) {
 		int iterator = 0;
@@ -369,6 +363,12 @@ getline(cin,name);
 			getline(programs, courseIDs[iterator], ',');
 			getline(programs, courseNames[iterator], '\n');//storing data in array
 			iterator++;}
+		cout<<"Please enter the teacher's subject/course.\n";
+		cout << "Available courses are :\n[ ";
+		for (int i = 0; i < iterator; i++) {
+			cout << courseNames[i] << " ";
+		}
+		cout << " ]\n";
 		bool chk=false;
 		do
 		{getline(cin,course_entered);
@@ -386,8 +386,8 @@ getline(cin,name);
 		continue;
 		}
 		}while(1);//course validation loop
-teachers<<cms_id<<","<<name<<","<<course_entered<<"\n";//writing to teachers record...
-teachers.close();
+	teachers<<cms_id<<","<<name<<","<<course_entered<<"\n";//writing to teachers record...
+	teachers.close();
 }
 }
 
@@ -409,8 +409,7 @@ void Admin::enrollStudents(){
 		}
 		while(1);//6 digit cms validation
 
-	cout<<"Please enter the name of degree program of student:"<<endl;
-	ifstream programs("./data/Programs.csv");//reading of program file
+	ifstream programs("./data/Programs.dat");//reading of program file
 	string courseIDs[30],courseNames[30],Shortforms[30];
 	if (!programs.fail()) {
 		int iterator = 0;
@@ -420,6 +419,12 @@ void Admin::enrollStudents(){
             getline(programs, courseNames[iterator], '\n');//storing data in array
 			iterator++;}
 		bool chk=false;
+		cout<<"Please enter the name of the degree program for new course."<<endl;//input for degree name
+		cout << "Available degree programs are :\n[ ";
+		for (int i = 0; i < iterator; i++) {
+			cout << courseNames[i] << " ";
+		}
+		cout << " ]\n";
 		do
 		{getline(cin,program_entered);
 		for(int i=0;i<iterator;i++)
@@ -437,12 +442,12 @@ void Admin::enrollStudents(){
 		}
 		}while(1);//degree porgram validation loop
         programs.close();
-		string sectiondir="./data/"+program_entered+"/Sectionlist.csv";
+		string sectiondir="./data/"+program_entered+"/Sectionlist.dat";
 		string secname[3];
 		ifstream sections(sectiondir.c_str());
 		iterator=0;
 		if(sections.fail()) {
-			cerr<<"File Sectionlist.csv in program folder couldnt be opened"<<endl;
+			cerr<<"File Sectionlist.dat in program folder couldnt be opened"<<endl;
 		}
 		else {
 			while(sections.peek()!=EOF){//reading name of sections and storing in section array
@@ -450,11 +455,11 @@ void Admin::enrollStudents(){
 				iterator++;
 			}
 			
-			cout<<"Enter name of section from the given options"<<"(";
+			cout<<"Enter name of section from the given options \n[ ";
 			for(int i=0;i<iterator;i++)
 				cout<<secname[i]<<" ";
 			
-			cout<<")"<<endl;
+			cout<<" ]"<<endl;
 			bool check=false;
 			do{
 				getline(cin,section);
@@ -476,20 +481,20 @@ void Admin::enrollStudents(){
 			} while(1);//section validation loop
 			cout<<"The student "<<name<<" has been successfully enrolled"<<endl;
 			//writing to students general record
-			ofstream studentrecord("./data/Students.csv",ios::app);//for keeping general record of students
+			ofstream studentrecord("./data/Students.dat",ios::app);//for keeping general record of students
 			studentrecord<<cms_id<<","<<name<<","<<program_entered<<","<<section << endl;
 			studentrecord.close();
-			string sectionStudentsRecordPath = "./data/" + program_entered + "/" + section + "/students.csv";
-			ofstream sectionstudents(sectionStudentsRecordPath.c_str());
+			string sectionStudentsRecordPath = "./data/" + program_entered + "/" + section + "/students.dat";
+			ofstream sectionstudents(sectionStudentsRecordPath.c_str(), ios::app);
 			sectionstudents << cms_id << "," << name << "," << program_entered << endl;
 
-			//retreiving course name from course.csv in degree program
+			//retreiving course name from course.dat in degree program
 			
 			string c_id[20],c_name[20];
-			string coursedir="./data/"+program_entered+"/Courses.csv";
+			string coursedir="./data/"+program_entered+"/Courses.dat";
 			ifstream courses(coursedir.c_str());
 			if(courses.fail())
-				cerr<<"File courses.csv could not be opened"<<endl;
+				cerr<<"File courses.dat could not be opened"<<endl;
 			iterator=0;
 			while(courses.peek()!=EOF)
 			{
@@ -499,14 +504,18 @@ void Admin::enrollStudents(){
 			} // retrieving name of courses
 			for(int i=0;i<iterator;i++)
 			{
-				string studentdir1="./data/"+program_entered+"/"+section+"/"+c_name[i]+"/assignments.csv";//path for assignment and quizes file
-				string studentdir2="./data/"+program_entered+"/"+section+"/"+c_name[i]+"/quizes.csv";
-				ofstream eia(studentdir1.c_str());//eia=entry in assignments.csv
-				eia<<cms_id<<","<<name<<"\n";
-				eia.close();
-				ofstream eiq(studentdir2.c_str());//eiq=entry in quizes.csv
-				eiq<<cms_id<<","<<name<<"\n";
-				eiq.close();
+				// string studentdir1="./data/"+program_entered+"/"+section+"/"+c_name[i]+"/assignments.dat";//path for assignment and quizes file
+				// string studentdir2="./data/"+program_entered+"/"+section+"/"+c_name[i]+"/quizes.dat";
+				// string studentdir3="./data/"+program_entered+"/"+section+"/"+c_name[i]+"/finalexam.dat";
+				// ofstream eia(studentdir1.c_str());//eia=entry in assignments.dat
+				// eia<<cms_id<<","<<name<<"\n";
+				// eia.close();
+				// ofstream eiq(studentdir2.c_str());//eiq=entry in quizes.dat
+				// eiq<<cms_id<<","<<name<<"\n";
+				// eiq.close();
+				// ofstream eife(studentdir3.c_str(),ios::app);//eiq=entry in finalexams.dat
+				// eife<<cms_id<<","<<name<<"\n";
+				// eife.close();
 			}
 		}
 	}

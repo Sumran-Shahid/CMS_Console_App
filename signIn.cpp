@@ -67,10 +67,10 @@ void SignIn::adminAccess(void) {
     cout << endl;
 
     ifstream list;
-    list.open("./data/admins.csv");
+    list.open("./data/admins.dat");
 
     if (list.fail()) {
-        cout << "ERROR! File not found" << endl;
+        cout << "admin.dat file not found" << endl;
     }
 
     string name, email;
@@ -89,8 +89,6 @@ void SignIn::adminAccess(void) {
         if (!id_found) {  // if the ID is not found, i.e., this variable is still false
             //system("CLS");//clears screen
             cout << "ID not found! Please enter ID again.\n";//error message 
-            cin.clear();//clears error on cin
-            cin.ignore(123, '\n');//ignores non numeric input and goes to next line 
             adminAccess();  //goes to recurssiion of this same function
         }
     } // first while ends here
@@ -113,7 +111,7 @@ void SignIn::teacherAccess(void) {
     cout << endl;
 
     ifstream        list;
-    list.open("./data/Teachers.csv");
+    list.open("./data/Teachers.dat");
 
     if (list.fail()) {
         cout << "ERROR! File not found" << endl;
@@ -136,8 +134,6 @@ void SignIn::teacherAccess(void) {
         } // inner while ends here
         if (!id_found) {  // if the ID is not found, i.e., this variable is still false
             cout << "ID not found! Please Enter it again.\n";
-            cin.clear();
-            cin.ignore(123, '\n');
             teacherAccess();
         }
     } // first while ends here
@@ -160,7 +156,7 @@ void SignIn::studentAccess(void) {
     cout << endl;
 
     ifstream list;
-    list.open("./data/Students.csv");
+    list.open("./data/Students.dat");
 
     if (list.fail()) {
         cout << "ERROR! File not found" << endl;
@@ -188,8 +184,6 @@ void SignIn::studentAccess(void) {
 
         if (!id_found) {  // if the ID is not found, i.e., this variable is still false
             cout << "ID not found! Please enter ID again.\n";
-            cin.clear();
-            cin.ignore(123, '\n');
             studentAccess();
         }
     } // first while ends here
