@@ -76,6 +76,9 @@ int main(void) {
 			}
         }
     }
+    else {
+	main();
+    }
 
     return 0;
 }  // main function ends here

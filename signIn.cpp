@@ -71,6 +71,7 @@ void SignIn::adminAccess(void) {
 
     if (list.fail()) {
         cout << "admin.dat file not found" << endl;
+	access_lvl = 0;
     }
 
     string name, email;
@@ -114,7 +115,8 @@ void SignIn::teacherAccess(void) {
     list.open("./data/Teachers.dat");
 
     if (list.fail()) {
-        cout << "ERROR! File not found" << endl;
+        cout << "Teachers record not found" << endl;
+        access_lvl = 0;
     }
 
     string          name;
@@ -159,8 +161,9 @@ void SignIn::studentAccess(void) {
     list.open("./data/Students.dat");
 
     if (list.fail()) {
-        cout << "ERROR! File not found" << endl;
-    }
+        cout << "Student record not found" << endl;
+        access_lvl = 0;
+}
 
     string          name;
     string          section;

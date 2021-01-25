@@ -9,12 +9,6 @@
 
 using namespace std;
 
-void makeAssignment(void);
-void makeQuiz(void);
-void markAssignment(void);
-void markQuiz(void);
-void resultCard(void);
-
 void Teacher::menu(void) {
 
 	cout << "What action do you want to perform?\n"
